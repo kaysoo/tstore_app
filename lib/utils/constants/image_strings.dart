@@ -53,4 +53,9 @@ class TImages {
 
   //product images
   static const String imageproduct1 = "assets/images/products/promoBanner1.png";
+  static const String imageproduct2 = "assets/images/products/sneaker5.png";
+  static const String imageproduct3 = "assets/images/products/sneaker7_.jpg";
+
+  //user image string
+  static const String user = "assets/images/user/user.jpeg";
 }

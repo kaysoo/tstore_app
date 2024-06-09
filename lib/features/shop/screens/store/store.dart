@@ -42,10 +42,10 @@ class TStore extends StatelessWidget {
                   backgroundColor: dark ? TColors.black : TColors.white,
                   expandedHeight: 440,
                   flexibleSpace: Padding(
-                    padding: EdgeInsets.all(TSizes.defaultSpace),
+                    padding: const EdgeInsets.all(TSizes.defaultSpace),
                     child: ListView(
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       children: [
                         //search bar
                         const SizedBox(
