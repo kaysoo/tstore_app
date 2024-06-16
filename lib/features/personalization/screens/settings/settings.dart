@@ -7,6 +7,8 @@ import 'package:tstore_app/common/widgets/list_tiles/luser_profile_list_tile.dar
 import 'package:tstore_app/common/widgets/list_tiles/settings_menu_list_tile.dart';
 import 'package:tstore_app/common/widgets/text/section_heading.dart';
 import 'package:tstore_app/features/personalization/screens/address/address.dart';
+import 'package:tstore_app/features/shop/screens/cart/cart.dart';
+import 'package:tstore_app/features/shop/screens/order/order.dart';
 import 'package:tstore_app/utils/constants/colors.dart';
 import 'package:tstore_app/utils/constants/sizes.dart';
 import 'package:tstore_app/utils/helpers/helper_functions.dart';
@@ -59,17 +61,17 @@ class SettingsScreen extends StatelessWidget {
                     subtitle: "Set shopping delivery address",
                     onTap: () => Get.to(() => const UserAddressScreen()),
                   ),
-                  const TSettingsMenuTile(
+                  TSettingsMenuTile(
                     icon: Iconsax.shopping_cart,
                     title: "My Cart",
                     subtitle: "Add, remove products and move to checkout",
-                    // onTap: () {},
+                    onTap: () => Get.to(() => const CartScreen()),
                   ),
-                  const TSettingsMenuTile(
+                  TSettingsMenuTile(
                     icon: Iconsax.bag_tick,
                     title: "My Orders",
                     subtitle: "In progress and Completed Orders",
-                    // onTap: () {},
+                    onTap: () => Get.to(() => const OrderScreen()),
                   ),
                   const TSettingsMenuTile(
                     icon: Iconsax.bank,

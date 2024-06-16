@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:tstore_app/common/widgets/image_text/vertical_image_text.dart';
 import 'package:tstore_app/common/widgets/text/section_heading.dart';
+import 'package:tstore_app/features/shop/screens/sub_category/sub_categories.dart';
 import 'package:tstore_app/utils/constants/image_strings.dart';
 import 'package:tstore_app/utils/constants/sizes.dart';
 
@@ -32,7 +34,7 @@ class THomeCategories extends StatelessWidget {
                   return TVerticalImageText(
                     title: "Sports",
                     image: TImages.sportIcon,
-                    onTap: () {},
+                    onTap: () => Get.to(() => const SubCategoriesScreen()),
                   );
                 }),
           ),

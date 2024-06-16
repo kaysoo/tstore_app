@@ -5,24 +5,23 @@ import 'package:tstore_app/common/widgets/text/product_title_text.dart';
 import 'package:tstore_app/utils/constants/colors.dart';
 import 'package:tstore_app/utils/constants/image_strings.dart';
 import 'package:tstore_app/utils/constants/sizes.dart';
+import 'package:tstore_app/utils/helpers/helper_functions.dart';
 
 class TCartItem extends StatelessWidget {
   const TCartItem({
     super.key,
-    required this.dark,
   });
-
-  final bool dark;
 
   @override
   Widget build(BuildContext context) {
+    final dark = THelperFunctions.isDarkMode(context);
     return Row(
       children: [
         TRoundedImage(
           imageUrl: TImages.imageproduct1,
           width: 60,
           height: 60,
-          padding: EdgeInsets.all(TSizes.sm),
+          padding: const EdgeInsets.all(TSizes.sm),
           backgroundcolor: dark ? TColors.darkerGrey : TColors.light,
         ),
         const SizedBox(
