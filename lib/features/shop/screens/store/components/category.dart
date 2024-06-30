@@ -29,7 +29,7 @@ class TCategoryTab extends StatelessWidget {
                   dark: dark,
                   images: const [
                     TImages.imageproduct1,
-                    TImages.promoBanner2,
+                    TImages.imageproduct2,
                     TImages.imageproduct1
                   ],
                 ),

@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:tstore_app/common/widgets/appbar/appbar.dart';
 import 'package:tstore_app/common/widgets/image/t_circular_image.dart';
+import 'package:tstore_app/common/widgets/loaders/shimmer_loader.dart';
 import 'package:tstore_app/common/widgets/text/section_heading.dart';
+import 'package:tstore_app/features/personalization/controllers/user_controller.dart';
 import 'package:tstore_app/features/personalization/screens/profile/components/profile_menu.dart';
+import 'package:tstore_app/features/personalization/screens/profile/components/re_authenticate_user_form.dart';
+import 'package:tstore_app/features/personalization/screens/profile/components/update_profile_details.dart';
 import 'package:tstore_app/utils/constants/image_strings.dart';
 import 'package:tstore_app/utils/constants/sizes.dart';
 import 'package:tstore_app/utils/helpers/helper_functions.dart';
@@ -15,8 +21,9 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunctions.isDarkMode(context);
+    final controller = UserController.instance;
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         shoeBackArrow: true,
         title: Text("Profile"),
       ),
@@ -30,14 +37,30 @@ class ProfileScreen extends StatelessWidget {
                 width: double.infinity,
                 child: Column(
                   children: [
-                    TCircularImage(
-                      dark: dark,
-                      image: TImages.user,
-                      width: 80,
-                      height: 80,
+                    Obx(
+                      () {
+                        final networkImage =
+                            controller.user.value.profilePicture;
+                        final image = networkImage.isNotEmpty
+                            ? networkImage
+                            : TImages.user;
+                        return controller.imageUploading.value
+                            ? const TShimmerLoader(
+                                width: 80,
+                                height: 80,
+                                radius: 80,
+                              )
+                            : TCircularImage(
+                                dark: dark,
+                                image: image,
+                                width: 80,
+                                height: 80,
+                                isNetworkImage: networkImage.isNotEmpty,
+                              );
+                      },
                     ),
                     TextButton(
-                        onPressed: () {},
+                        onPressed: () => controller.UploadUserProfilePicture(),
                         child: const Text("Change Profile Picture"))
                   ],
                 ),
@@ -57,12 +80,12 @@ class ProfileScreen extends StatelessWidget {
               ),
               TProfileMenu(
                 title: "Name",
-                value: "Coding with kayso",
-                onPressed: () {},
+                value: controller.user.value.fullname,
+                onPressed: () => Get.to(() => const UpdateProfileDetails()),
               ),
               TProfileMenu(
                 title: "Username",
-                value: "kayso",
+                value: controller.user.value.userName,
                 onPressed: () {},
               ),
               const SizedBox(
@@ -80,18 +103,18 @@ class ProfileScreen extends StatelessWidget {
               ),
               TProfileMenu(
                 title: "User ID",
-                value: "kayso22",
+                value: controller.user.value.id,
                 onPressed: () {},
                 icon: Iconsax.copy,
               ),
               TProfileMenu(
                 title: "E-mail",
-                value: "kayso22@gmail.com",
+                value: controller.user.value.email,
                 onPressed: () {},
               ),
               TProfileMenu(
                 title: "Phone Number",
-                value: "+233 54 079 7528",
+                value: controller.user.value.phoneNumber,
                 onPressed: () {},
               ),
               TProfileMenu(
@@ -111,7 +134,7 @@ class ProfileScreen extends StatelessWidget {
 
               Center(
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () => controller.deleteAccountWarningPopup(),
                   child: const Text(
                     "Close Account",
                     style: TextStyle(color: Colors.red),

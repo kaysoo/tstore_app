@@ -6,6 +6,7 @@ import 'package:tstore_app/common/widgets/containers/primary_header_container.da
 import 'package:tstore_app/common/widgets/list_tiles/luser_profile_list_tile.dart';
 import 'package:tstore_app/common/widgets/list_tiles/settings_menu_list_tile.dart';
 import 'package:tstore_app/common/widgets/text/section_heading.dart';
+import 'package:tstore_app/data/repositories/repositories_authentication/authentication_repository.dart';
 import 'package:tstore_app/features/personalization/screens/address/address.dart';
 import 'package:tstore_app/features/shop/screens/cart/cart.dart';
 import 'package:tstore_app/features/shop/screens/order/order.dart';
@@ -142,7 +143,8 @@ class SettingsScreen extends StatelessWidget {
                     width: double.infinity,
                     child: OutlinedButton(
                       child: const Text("Logout"),
-                      onPressed: () {},
+                      onPressed: () =>
+                          AuthenticationRespository.instance.logout(),
                     ),
                   )
                 ],

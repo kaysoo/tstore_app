@@ -5,6 +5,7 @@ import 'package:tstore_app/common/widgets/containers/search_container.dart';
 import 'package:tstore_app/common/widgets/layout/grid_layout.dart';
 import 'package:tstore_app/common/widgets/products_cart/product_card_vertical.dart';
 import 'package:tstore_app/common/widgets/text/section_heading.dart';
+import 'package:tstore_app/features/personalization/controllers/user_controller.dart';
 import 'package:tstore_app/features/shop/screens/all_products/all_products.dart';
 import 'package:tstore_app/features/shop/screens/home/components/home_appbar.dart';
 import 'package:tstore_app/features/shop/screens/home/components/home_categories.dart';
@@ -17,6 +18,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(UserController());
     return Scaffold(
         body: SingleChildScrollView(
       child: Column(
@@ -54,9 +56,9 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   const TPromoSlider(
                     banners: [
-                      TImages.promoBanner2,
                       TImages.promoBanner3,
-                      TImages.promoBanner1
+                      TImages.promoBanner1,
+                      TImages.promoBanner3
                     ],
                   ),
                   const SizedBox(

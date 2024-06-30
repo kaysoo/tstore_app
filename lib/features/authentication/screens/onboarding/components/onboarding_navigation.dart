@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:tstore_app/features/authentication/controllers/controllers-onboarding/onboarding_controller.dart';
+import 'package:tstore_app/features/authentication/controllers/onboarding/onboarding_controller.dart';
 import 'package:tstore_app/utils/constants/colors.dart';
 import 'package:tstore_app/utils/constants/sizes.dart';
 import 'package:tstore_app/utils/device/device_utility.dart';
