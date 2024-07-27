@@ -8,9 +8,14 @@ class TProductQuantityWithAddRow extends StatelessWidget {
   const TProductQuantityWithAddRow({
     super.key,
     required this.dark,
+    required this.quantity,
+    this.add,
+    this.remove,
   });
 
   final bool dark;
+  final int quantity;
+  final VoidCallback? add, remove;
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +30,13 @@ class TProductQuantityWithAddRow extends StatelessWidget {
           size: TSizes.md,
           color: dark ? TColors.white : TColors.black,
           backgroundColor: dark ? TColors.darkerGrey : TColors.light,
+          onPressed: remove,
         ),
         const SizedBox(
           width: TSizes.spaceBtwItems,
         ),
         Text(
-          "2",
+          quantity.toString(),
           style: Theme.of(context).textTheme.titleSmall,
         ),
         const SizedBox(
@@ -44,6 +50,7 @@ class TProductQuantityWithAddRow extends StatelessWidget {
           size: TSizes.md,
           color: TColors.white,
           backgroundColor: TColors.primary,
+          onPressed: add,
         ),
       ],
     );

@@ -1,0 +1,42 @@
+import 'package:get/get.dart';
+import 'package:tstore_app/data/repositories/banners/banners_repository.dart';
+import 'package:tstore_app/features/shop/models/banner_model.dart';
+import 'package:tstore_app/utils/popups/loader.dart';
+
+class BannerController extends GetxController {
+  //variables
+  final carouselCurrentIndex = 0.obs;
+  final isLoading = false.obs;
+  final RxList<BannerModel> banners = <BannerModel>[].obs;
+
+  @override
+  void onInit() {
+    fetchBanners();
+    super.onInit();
+  }
+
+  // update page and navigational dots
+  void updatePageIndicator(index) {
+    carouselCurrentIndex.value = index;
+  }
+
+  //fetch banners
+  Future<void> fetchBanners() async {
+    try {
+      //show loader while loading categories
+      isLoading.value = true;
+
+      //fetch banners
+      final bannerRep = Get.put(BannerRepository());
+      final banners = await bannerRep.fetchBanners();
+
+      //assign banners
+      this.banners.assignAll(banners);
+    } catch (e) {
+      TLoaders.errorSnackBar(title: 'Oh Snap', message: e.toString());
+    } finally {
+      //remove loader
+      isLoading.value = false;
+    }
+  }
+}

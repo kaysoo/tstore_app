@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tstore_app/common/widgets/image/t_circular_image.dart';
 import 'package:tstore_app/utils/constants/colors.dart';
 import 'package:tstore_app/utils/constants/sizes.dart';
 import 'package:tstore_app/utils/helpers/helper_functions.dart';
@@ -11,39 +12,34 @@ class TVerticalImageText extends StatelessWidget {
     this.textColor = TColors.white,
     this.backgroundColor,
     this.onTap,
+    this.isNetworkImage = true,
   });
 
   final String image, title;
   final Color textColor;
   final Color? backgroundColor;
   final void Function()? onTap;
+  final bool isNetworkImage;
 
   @override
   Widget build(BuildContext context) {
+    final dark = THelperFunctions.isDarkMode(context);
     return GestureDetector(
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.only(right: TSizes.spaceBtwItems),
         child: Column(children: [
           //circular icon
-          Container(
-            width: 56,
-            height: 56,
-            padding: const EdgeInsets.all(TSizes.sm),
-            decoration: BoxDecoration(
-                color: backgroundColor ??
-                    (THelperFunctions.isDarkMode(context)
-                        ? TColors.black
-                        : TColors.white),
-                borderRadius: BorderRadius.circular(100)),
-            child: Image(
-              image: AssetImage(image),
-              fit: BoxFit.cover,
-              color: THelperFunctions.isDarkMode(context)
-                  ? TColors.light
-                  : TColors.dark,
-            ),
+          TCircularImage(
+            dark: dark,
+            image: image,
+            isNetworkImage: isNetworkImage,
+            fit: BoxFit.fitWidth,
+            // padding: TSizes.sm * 1.4,
+            backgroundColor: backgroundColor,
+            overlayColor: dark ? TColors.light : TColors.dark,
           ),
+
           //text below circular icon
           const SizedBox(
             height: TSizes.spaceBtwItems / 2,
@@ -57,6 +53,7 @@ class TVerticalImageText extends StatelessWidget {
                   .labelMedium!
                   .apply(color: textColor),
               maxLines: 1,
+              textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
             ),
           )

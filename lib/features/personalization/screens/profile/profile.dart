@@ -5,7 +5,7 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:tstore_app/common/widgets/appbar/appbar.dart';
 import 'package:tstore_app/common/widgets/image/t_circular_image.dart';
-import 'package:tstore_app/common/widgets/loaders/shimmer_loader.dart';
+import 'package:tstore_app/common/widgets/loaders/shimmer/shimmer_loader.dart';
 import 'package:tstore_app/common/widgets/text/section_heading.dart';
 import 'package:tstore_app/features/personalization/controllers/user_controller.dart';
 import 'package:tstore_app/features/personalization/screens/profile/components/profile_menu.dart';

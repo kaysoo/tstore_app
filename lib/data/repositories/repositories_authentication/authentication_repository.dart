@@ -9,6 +9,7 @@ import 'package:tstore_app/features/authentication/screens/login/login.dart';
 import 'package:tstore_app/features/authentication/screens/onboarding/onboarding.dart';
 import 'package:tstore_app/features/authentication/screens/signup/verify_email.dart';
 import 'package:tstore_app/utils/exceptions/firebase_auth_exceptions.dart';
+import 'package:tstore_app/utils/local_storage/storage_utility.dart';
 import 'package:tstore_app/utils/popups/loader.dart';
 
 class AuthenticationRespository extends GetxController {
@@ -33,6 +34,9 @@ class AuthenticationRespository extends GetxController {
     final user = _auth.currentUser;
     if (user != null) {
       if (user.emailVerified) {
+        //initialize user specific storage
+        await TLocalStorage.init(user.uid);
+
         Get.offAll(() => const BottomNavigation());
       } else {
         Get.offAll(() => VerifyEmailScreen(

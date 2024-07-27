@@ -3,26 +3,30 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:readmore/readmore.dart';
 import 'package:tstore_app/common/widgets/text/section_heading.dart';
+import 'package:tstore_app/features/shop/models/product_model.dart';
 import 'package:tstore_app/features/shop/screens/product_details/components/bottom_add_to_cart.dart';
 import 'package:tstore_app/features/shop/screens/product_details/components/product_attributes.dart';
 import 'package:tstore_app/features/shop/screens/product_details/components/product_details_image_slider.dart';
 import 'package:tstore_app/features/shop/screens/product_details/components/product_meta_data.dart';
 import 'package:tstore_app/features/shop/screens/product_details/components/rating_and_share.dart';
 import 'package:tstore_app/features/shop/screens/product_reviews/product_reviews.dart';
+import 'package:tstore_app/utils/constants/enums.dart';
 import 'package:tstore_app/utils/constants/sizes.dart';
 
 class ProductDetailScreen extends StatelessWidget {
-  const ProductDetailScreen({super.key});
+  const ProductDetailScreen({super.key, required this.product});
+
+  final ProductModel product;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const TBottomAddtoCart(),
+      bottomNavigationBar: TBottomAddtoCart(product: product),
       body: SingleChildScrollView(
         child: Column(
           children: [
             //product image slider
-            const TProductImagesSlider(),
+            TProductImagesSlider(product: product),
 
             //product detaisl
             Padding(
@@ -36,14 +40,19 @@ class ProductDetailScreen extends StatelessWidget {
                   const TRatingandShares(),
 
                   //price,title,stock and brand
-                  const TProductMetaData(),
+                  TProductMetaData(
+                    product: product,
+                  ),
 
                   //attributes
-                  const ProductAttributes(),
-
-                  const SizedBox(
-                    height: TSizes.spaceBtwSections,
-                  ),
+                  if (product.productType == ProductType.variable.name)
+                    ProductAttributes(
+                      product: product,
+                    ),
+                  if (product.productType == ProductType.variable.name)
+                    const SizedBox(
+                      height: TSizes.spaceBtwSections,
+                    ),
 
                   //checkout button
 
@@ -61,8 +70,8 @@ class ProductDetailScreen extends StatelessWidget {
                   const SizedBox(
                     height: TSizes.spaceBtwItems,
                   ),
-                  const ReadMoreText(
-                    "This is a Product description for Yellow Nike SB Dunk. There are more things th can be added but i am just practicing for when i actually have money and nothing more.",
+                  ReadMoreText(
+                    product.description ?? '',
                     trimLines: 2,
                     trimMode: TrimMode.Line,
                     trimCollapsedText: " Show more",

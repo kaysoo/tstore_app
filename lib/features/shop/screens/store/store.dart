@@ -5,9 +5,13 @@ import 'package:tstore_app/common/widgets/appbar/tapbar.dart';
 import 'package:tstore_app/common/widgets/brand/t_brand_card.dart';
 import 'package:tstore_app/common/widgets/containers/search_container.dart';
 import 'package:tstore_app/common/widgets/layout/grid_layout.dart';
+import 'package:tstore_app/common/widgets/loaders/shimmer/brand_shimmer.dart';
 import 'package:tstore_app/common/widgets/products_cart/cart_menu_icon.dart';
 import 'package:tstore_app/common/widgets/text/section_heading.dart';
+import 'package:tstore_app/features/shop/controllers/brand_controller.dart';
+import 'package:tstore_app/features/shop/controllers/category_controller.dart';
 import 'package:tstore_app/features/shop/screens/brands/all_brands.dart';
+import 'package:tstore_app/features/shop/screens/brands/brand_products.dart';
 import 'package:tstore_app/features/shop/screens/store/components/category.dart';
 import 'package:tstore_app/utils/constants/colors.dart';
 import 'package:tstore_app/utils/constants/image_strings.dart';
@@ -19,9 +23,11 @@ class TStore extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brandController = Get.put(BrandController());
+    final categories = CategoryController.instance.featuredCategories;
     final dark = THelperFunctions.isDarkMode(context);
     return DefaultTabController(
-      length: 5,
+      length: categories.length,
       child: Scaffold(
         appBar: CustomAppBar(
           title: Text(
@@ -29,9 +35,7 @@ class TStore extends StatelessWidget {
             style: Theme.of(context).textTheme.headlineMedium,
           ),
           actions: [
-            TCartCounterIcon(
-                onPressed: () {},
-                iconColor: dark ? TColors.white : TColors.dark)
+            TCartCounterIcon(iconColor: dark ? TColors.white : TColors.dark)
           ],
         ),
         body: NestedScrollView(
@@ -73,59 +77,62 @@ class TStore extends StatelessWidget {
                         ),
 
                         //grid layout
-                        TGridLayout(
-                            itemCount: 4,
-                            mainAxisExtent: 80,
-                            itemBuilder: (_, index) {
-                              return TBrandCard(
-                                showBorder: true,
-                                dark: dark,
-                                title: 'Nike',
-                                textDescription: "25 pieces in stock currently",
-                                image: TImages.shoeIcon,
-                              );
-                            })
+                        Obx(() {
+                          if (brandController.isLoading.value) {
+                            return const TBrandShimmer();
+                          }
+
+                          if (brandController.featuredBrands.isEmpty) {
+                            return Center(
+                              child: Text(
+                                'No Data Found...',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .apply(color: Colors.white),
+                              ),
+                            );
+                          }
+
+                          return TGridLayout(
+                              itemCount: brandController.featuredBrands.length,
+                              mainAxisExtent: 80,
+                              itemBuilder: (_, index) {
+                                final brand =
+                                    brandController.featuredBrands[index];
+
+                                return TBrandCard(
+                                  showBorder: true,
+                                  dark: dark,
+                                  title: brand.name,
+                                  textDescription:
+                                      "${brand.productsCount ?? 0} pieces in stock currently",
+                                  image: brand.image,
+                                  onTap: () => Get.to(() => BrandProducts(
+                                        brand: brand,
+                                      )),
+                                );
+                              });
+                        })
                       ],
                     ),
                   ),
 
                   //tabs
-                  bottom: const TTabBar(
-                    tabs: [
-                      Tab(
-                        child: Text("Sports"),
-                      ),
-                      Tab(
-                        child: Text("Furniture"),
-                      ),
-                      Tab(
-                        child: Text("Electronics"),
-                      ),
-                      Tab(
-                        child: Text("Clothes"),
-                      ),
-                      Tab(
-                        child: Text("Cosmetics"),
-                      ),
-                    ],
+                  bottom: TTabBar(
+                    tabs: categories
+                        .map((category) => Tab(child: Text(category.name)))
+                        .toList(),
                   ))
             ];
           },
-          body: TabBarView(children: [
-            TCategoryTab(
-              dark: dark,
-            ),
-            TCategoryTab(
-              dark: dark,
-            ),
-            TCategoryTab(
-              dark: dark,
-            ),
-            TCategoryTab(
-              dark: dark,
-            ),
-            TCategoryTab(dark: dark),
-          ]),
+          body: TabBarView(
+              children: categories
+                  .map((category) => TCategoryTab(
+                        dark: dark,
+                        category: category,
+                      ))
+                  .toList()),
         ),
       ),
     );

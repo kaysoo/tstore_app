@@ -37,8 +37,6 @@ class TFullScreenLoader {
   static void stopLoading() {
     if (Navigator.of(Get.overlayContext!).canPop()) {
       Navigator.of(Get.overlayContext!).pop();
-    } else {
-      TLoaders.successSnackBar(title: 'didnt close', message: 'didnt close');
     }
   }
   // static stopLoading() {

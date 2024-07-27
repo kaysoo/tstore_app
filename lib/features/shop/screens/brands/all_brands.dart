@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 import 'package:tstore_app/common/widgets/appbar/appbar.dart';
 import 'package:tstore_app/common/widgets/brand/t_brand_card.dart';
 import 'package:tstore_app/common/widgets/layout/grid_layout.dart';
+import 'package:tstore_app/common/widgets/loaders/shimmer/brand_shimmer.dart';
 import 'package:tstore_app/common/widgets/text/section_heading.dart';
+import 'package:tstore_app/features/shop/controllers/brand_controller.dart';
 import 'package:tstore_app/features/shop/screens/brands/brand_products.dart';
 import 'package:tstore_app/utils/constants/image_strings.dart';
 import 'package:tstore_app/utils/constants/sizes.dart';
@@ -14,6 +16,7 @@ class AllBrandsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brandController = BrandController.instance;
     final dark = THelperFunctions.isDarkMode(context);
     return Scaffold(
       appBar: const CustomAppBar(
@@ -35,17 +38,42 @@ class AllBrandsScreen extends StatelessWidget {
               ),
 
               //brands
-              TGridLayout(
-                  itemCount: 10,
-                  mainAxisExtent: 80,
-                  itemBuilder: (context, index) => TBrandCard(
-                        dark: dark,
-                        image: TImages.clothIcon,
-                        textDescription: 'Available in more colors',
-                        title: 'Nike',
-                        showBorder: true,
-                        onTap: () => Get.to(() => const BrandProducts()),
-                      ))
+              Obx(
+                () {
+                  if (brandController.isLoading.value) {
+                    return const TBrandShimmer();
+                  }
+
+                  if (brandController.allBrands.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'No Data Found...',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .apply(color: Colors.white),
+                      ),
+                    );
+                  }
+
+                  return TGridLayout(
+                      itemCount: brandController.allBrands.length,
+                      mainAxisExtent: 80,
+                      itemBuilder: (context, index) {
+                        final brand = brandController.allBrands[index];
+                        return TBrandCard(
+                          dark: dark,
+                          image: brand.image,
+                          textDescription: ' ${brand.productsCount} products',
+                          title: brand.name,
+                          showBorder: true,
+                          onTap: () => Get.to(() => BrandProducts(
+                                brand: brand,
+                              )),
+                        );
+                      });
+                },
+              )
             ],
           ),
         ),

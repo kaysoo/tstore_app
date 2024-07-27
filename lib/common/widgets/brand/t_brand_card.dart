@@ -10,7 +10,7 @@ class TBrandCard extends StatelessWidget {
   const TBrandCard({
     super.key,
     required this.dark,
-    this.isNetworkImage = false,
+    this.isNetworkImage = true,
     required this.image,
     required this.textDescription,
     required this.title,

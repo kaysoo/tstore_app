@@ -23,55 +23,58 @@ class UpdateProfileDetails extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(TSizes.defaultSpace),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            //heading
-            Text(
-              'Kindly ensure all details entered is valid as any detail changed will appear on several pages',
-              style: Theme.of(context).textTheme.labelMedium,
-            ),
-            const SizedBox(
-              height: TSizes.spaceBtwSections,
-            ),
-            //text fields and save button
-            Form(
-                child: Column(
-              children: [
-                TextFormField(
-                  controller: controller.firstName,
-                  validator: (value) =>
-                      TValidator.validateEmptyText('First name', value),
-                  expands: false,
-                  decoration: const InputDecoration(
-                      labelText: 'First Name', prefixIcon: Icon(Iconsax.user)),
-                ),
-                const SizedBox(
-                  height: TSizes.spaceBtwInputFields,
-                ),
-                TextFormField(
-                  controller: controller.lastName,
-                  validator: (value) =>
-                      TValidator.validateEmptyText('Last name', value),
-                  expands: false,
-                  decoration: const InputDecoration(
-                      labelText: 'Last Name', prefixIcon: Icon(Iconsax.user)),
-                ),
-              ],
-            )),
-            const SizedBox(
-              height: TSizes.spaceBtwSections,
-            ),
-
-            // save button
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () => controller.updateUserName(),
-                child: const Text('Save'),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              //heading
+              Text(
+                'Kindly ensure all details entered is valid as any detail changed will appear on several pages',
+                style: Theme.of(context).textTheme.labelMedium,
               ),
-            )
-          ],
+              const SizedBox(
+                height: TSizes.spaceBtwSections,
+              ),
+              //text fields and save button
+              Form(
+                  child: Column(
+                children: [
+                  TextFormField(
+                    controller: controller.firstName,
+                    validator: (value) =>
+                        TValidator.validateEmptyText('First name', value),
+                    expands: false,
+                    decoration: const InputDecoration(
+                        labelText: 'First Name',
+                        prefixIcon: Icon(Iconsax.user)),
+                  ),
+                  const SizedBox(
+                    height: TSizes.spaceBtwInputFields,
+                  ),
+                  TextFormField(
+                    controller: controller.lastName,
+                    validator: (value) =>
+                        TValidator.validateEmptyText('Last name', value),
+                    expands: false,
+                    decoration: const InputDecoration(
+                        labelText: 'Last Name', prefixIcon: Icon(Iconsax.user)),
+                  ),
+                ],
+              )),
+              const SizedBox(
+                height: TSizes.spaceBtwSections,
+              ),
+
+              // save button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => controller.updateUserName(),
+                  child: const Text('Save'),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
