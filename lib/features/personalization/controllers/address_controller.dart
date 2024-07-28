@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tstore_app/common/widgets/loaders/shimmer/shimmer_loader.dart';
+import 'package:tstore_app/common/widgets/text/section_heading.dart';
 import 'package:tstore_app/data/repositories/address/address_repository.dart';
 import 'package:tstore_app/features/personalization/models/address_model.dart';
+import 'package:tstore_app/features/personalization/screens/address/add_new_address.dart';
+import 'package:tstore_app/features/personalization/screens/address/components/single_address.dart';
+import 'package:tstore_app/utils/constants/sizes.dart';
 import 'package:tstore_app/utils/helpers/network_manager.dart';
 import 'package:tstore_app/utils/popups/full_screen_loader.dart';
 import 'package:tstore_app/utils/popups/loader.dart';
@@ -23,6 +27,12 @@ class AddressController extends GetxController {
   RxBool refreshData = true.obs;
 
   final addressRepository = Get.put(AddressRepository());
+
+  @override
+  void onInit() {
+    allUserAddresses();
+    super.onInit();
+  }
 
   //fetch all user specific addresses
   Future<List<AddressModel>> allUserAddresses() async {
@@ -135,6 +145,65 @@ class AddressController extends GetxController {
       TFullScreenLoader.stopLoading();
       TLoaders.errorSnackBar(title: 'Address not found', message: e.toString());
     }
+  }
+
+  Future<dynamic> selectAddressPopup(BuildContext context) {
+    return showModalBottomSheet(
+        context: context,
+        builder: (_) => SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.all(TSizes.lg),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const TSectionHeading(
+                      title: 'Select Address',
+                      showActionButton: false,
+                    ),
+                    FutureBuilder(
+                        future: allUserAddresses(),
+                        builder: (_, snapshot) {
+                          //handle loader and error messages
+                          if (!snapshot.hasData ||
+                              snapshot.data == null ||
+                              snapshot.data!.isEmpty) {
+                            return const Center(
+                              child: Text('No Data Found...'),
+                            );
+                          }
+
+                          if (snapshot.hasError) {
+                            return const Center(
+                              child: Text('Something went wrong...'),
+                            );
+                          }
+                          final response = snapshot.data!;
+
+                          return ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: response.length,
+                              itemBuilder: (_, index) => TSingleAddress(
+                                  address: response[index],
+                                  onTap: () async {
+                                    await selectAddress(response[index]);
+                                    Get.back();
+                                  }));
+                        }),
+                    const SizedBox(
+                      height: TSizes.defaultSpace * 2,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () =>
+                            Get.to(() => const AddNewAddressScreen()),
+                        child: const Text('Add new address'),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ));
   }
 
   //function to reset form fields

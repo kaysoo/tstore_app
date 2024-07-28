@@ -5,6 +5,8 @@ import 'package:tstore_app/common/widgets/appbar/appbar.dart';
 import 'package:tstore_app/common/widgets/containers/rounded_container.dart';
 import 'package:tstore_app/common/widgets/products_cart/coupon_widget.dart';
 import 'package:tstore_app/common/widgets/success_screen/success_screen.dart';
+import 'package:tstore_app/features/shop/controllers/cart_controller.dart';
+import 'package:tstore_app/features/shop/controllers/product/order_controller.dart';
 import 'package:tstore_app/features/shop/screens/cart/components/cart_items_listview.dart';
 import 'package:tstore_app/features/shop/screens/checkout/components/billing_address_section.dart';
 import 'package:tstore_app/features/shop/screens/checkout/components/billing_amount_section.dart';
@@ -13,6 +15,8 @@ import 'package:tstore_app/utils/constants/colors.dart';
 import 'package:tstore_app/utils/constants/image_strings.dart';
 import 'package:tstore_app/utils/constants/sizes.dart';
 import 'package:tstore_app/utils/helpers/helper_functions.dart';
+import 'package:tstore_app/utils/helpers/pricing_calculator.dart';
+import 'package:tstore_app/utils/popups/loader.dart';
 
 class CheckoutScreen extends StatelessWidget {
   const CheckoutScreen({super.key});
@@ -20,6 +24,10 @@ class CheckoutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunctions.isDarkMode(context);
+    final cartController = CartController.instance;
+    final subTotal = cartController.totalCartPrice.value;
+    final orderController = Get.put(OrderController());
+    final totalAmount = TPricingCalculator.calculateTotalPrice(subTotal, 'GH');
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -35,39 +43,39 @@ class CheckoutScreen extends StatelessWidget {
           child: Column(
             children: [
               /// items in the cart
-              TCartItems(
+              const TCartItems(
                 showaddremovebuttons: false,
               ),
-              SizedBox(
+              const SizedBox(
                 height: TSizes.spaceBtwSections,
               ),
 
               //coupon textfield
-              TCouponCode(),
-              SizedBox(
+              const TCouponCode(),
+              const SizedBox(
                 height: TSizes.spaceBtwSections,
               ),
 
               //billing section
               RoundedContainer(
-                padding: EdgeInsets.all(TSizes.md),
+                padding: const EdgeInsets.all(TSizes.md),
                 showBorder: true,
                 backgroundColor: dark ? TColors.black : TColors.white,
-                child: Column(
+                child: const Column(
                   children: [
                     //pricing
                     TBillingAmountSection(),
-                    const SizedBox(
+                    SizedBox(
                       height: TSizes.spaceBtwItems,
                     ),
                     //divider
-                    const Divider(),
-                    const SizedBox(
+                    Divider(),
+                    SizedBox(
                       height: TSizes.spaceBtwItems,
                     ),
                     //payment methods
                     TBillingPaymentSection(),
-                    const SizedBox(
+                    SizedBox(
                       height: TSizes.spaceBtwItems,
                     ),
                     //Address
@@ -82,16 +90,12 @@ class CheckoutScreen extends StatelessWidget {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(TSizes.defaultSpace),
         child: ElevatedButton(
-          onPressed: () => Get.to(
-            () => SuccessScreen(
-                image: TImages.paymentSuccess,
-                title: 'Payment Success',
-                subtitle: 'Your item will be shipped soon',
-                onPressed: () => Get.offAll(
-                      () => const BottomNavigation(),
-                    )),
-          ),
-          child: const Text("Checkout \$225.0"),
+          onPressed: subTotal > 0
+              ? () => orderController.processOrder(totalAmount)
+              : () => TLoaders.warningSnackBar(
+                  title: 'Empty Cart',
+                  message: 'Add items to the cart in order to proceed.'),
+          child: Text("Checkout \$$totalAmount"),
         ),
       ),
     );

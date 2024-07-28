@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:tstore_app/features/shop/controllers/cart_controller.dart';
 import 'package:tstore_app/utils/constants/sizes.dart';
+import 'package:tstore_app/utils/helpers/pricing_calculator.dart';
 
 class TBillingAmountSection extends StatelessWidget {
   const TBillingAmountSection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = CartController.instance;
+    final subTotal = controller.totalCartPrice.value;
     return Column(
       children: [
         //subtotal
@@ -17,7 +21,7 @@ class TBillingAmountSection extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             Text(
-              '\$250.00',
+              '\$$subTotal',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],
@@ -35,7 +39,24 @@ class TBillingAmountSection extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             Text(
-              '\$2.50',
+              '\$${TPricingCalculator.calculateShippingCost(subTotal, 'GH')}',
+              style: Theme.of(context).textTheme.labelLarge,
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: TSizes.spaceBtwItems / 2,
+        ),
+        //TAX fee
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Tax Fee',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            Text(
+              '\$${TPricingCalculator.calculateTax(subTotal, 'GH')}',
               style: Theme.of(context).textTheme.labelLarge,
             ),
           ],
@@ -53,7 +74,7 @@ class TBillingAmountSection extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             Text(
-              '\$252.50',
+              '\$${TPricingCalculator.calculateTotalPrice(subTotal, 'GH')}',
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ],
